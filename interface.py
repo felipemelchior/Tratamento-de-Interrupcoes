@@ -2,11 +2,13 @@ import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QAction, QLabel, QLineEdit, QMessageBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import pyqtSlot, QThread
-from backend import *
+from backend import * # Importacao da classe backend
 
-bk = Backend()
+# Variaveis globais
+bk = Backend() # Instanciacao da classe backend
 aux = []
 
+# Funcao que a Thread utiliza para ficar atualizando os dados
 def Atualiza():
     global aux
     aux1 = bk.retornaPrioridade()
@@ -30,10 +32,10 @@ class Window(QMainWindow):
         self.height = 480 # Altura da janela
         self.responsivo = 30
         self.initUI()
-        self.Thread1 = threading.Thread(target=Atualiza)
+        self.Thread1 = threading.Thread(target=Atualiza) # Thread de atualizacao dos dados
         self.Thread1.start()
-        self.stop_event = threading.Event()
-        self.Thread2 = threading.Thread(target=self.updateUI,args=(self.stop_event,))
+        self.stop_event = threading.Event() # Variavel do tipo evento, usada para condicao de parada da thread
+        self.Thread2 = threading.Thread(target=self.updateUI,args=(self.stop_event,)) # Thread de atualizacao da janela
         self.Thread2.start()
 
     def initUI(self):
@@ -165,6 +167,7 @@ class Window(QMainWindow):
 
         self.show()
 
+    # Funcao que atualiza janela
     def updateUI(self, stop_argument):
         while True and not stop_argument.isSet():
             self.prioridade_1.setText("    " + str(aux[0][0]))
@@ -187,6 +190,6 @@ class Window(QMainWindow):
             self.tempo_3.setText("    " + str(aux[3][2]))
             self.tempo_4.setText("    " + str(aux[3][3]))
         
-
-    def Ajuda(self): # Função que exibe a ajuda do programa
-        QMessageBox.question(self, "Ajuda", "Este Software ", QMessageBox.Ok)
+    # Função que exibe a ajuda do programa
+    def Ajuda(self):
+        QMessageBox.question(self, "Ajuda", "Este Software tem como objetivo simular um sistema de tratamento de interrupção\n\n1. Bloco de Threads\nNeste bloco, estarão os números das quatros threads, fixas.\n\n2.Bloco de Prioridade\nNeste bloco se localizam a prioridade de cada thread. Quanto maior este número, maior será sua prioridade.\n\n3. Fila de Processos\nAqui se encontra a situação atual da fila, atualizada a cada segundo.\n\n4. Situação\nEste bloco mostra a atual situação de cada thread. Tendo 'R' significando 'Rodando' e 'B' significando 'Bloqueada'.\n\n5. Tempo de Bloqueio\nNeste bloco estão indicadas a quantidade de ciclos que aquela thread está bloqueada. Este número decrementa a cada segundo, ou seja, 1 ciclo por segundo.", QMessageBox.Ok)

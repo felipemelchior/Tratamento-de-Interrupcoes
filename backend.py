@@ -1,15 +1,15 @@
-import threading
-import time
-import random as rd
+import threading # Biblioteca de threads
+import time # Biblioteca de tempo
+import random as rd # Biblioteca usada para aleatorizar numeros
 
 class Backend():
     def __init__(self):
-        self.prioridade = [-1,-1,-1,-1]
-        self.fila = [-1,-1,-1,-1]
-        self.situacao = ['R','R','R','R']
-        self.tempoBloqueio = [0,0,0,0]
+        self.prioridade = [-1,-1,-1,-1] # Inicio da lista de prioridade
+        self.fila = [-1,-1,-1,-1] # Inicio da fila de processos
+        self.situacao = ['R','R','R','R'] # Inicio da lista de situacao
+        self.tempoBloqueio = [0,0,0,0] # Inicio da lista de tempo de bloqueio
 
-    def inicializaFila(self): 
+    def inicializaFila(self): # Inicializa a fila ja ordenada com a sua devida prioridade 
         aux = [[1, self.prioridade[0]],[2, self.prioridade[1]], [3, self.prioridade[2]],[4, self.prioridade[3]]]
 
         for i in range(len(aux)):
@@ -20,7 +20,7 @@ class Backend():
         for i in range(len(aux)):
             self.fila[i] = aux[i][0]
 
-    def defineSituacao(self):
+    def defineSituacao(self): # Gera um numero aleatorio, e com base nesse numero, bloqueia ou nao o processo
         bloq = rd.randrange(10)
 
         if(bloq == 0):
@@ -29,11 +29,11 @@ class Backend():
             self.situacao[self.fila[0]-1] = 'B'
             self.fila[0] = -1
 
-    def retornaPrioridade(self):
+    def retornaPrioridade(self): # Gera a lista de prioridade inicial
         self.prioridade = [rd.randrange(10),rd.randrange(10),rd.randrange(10),rd.randrange(10)]
         return self.prioridade
 
-    def retornaFila(self):
+    def retornaFila(self): # Move a fila de processos e modifica as prioridades
         self.defineSituacao()
         
         for i in range(len(self.fila)-1):
@@ -50,10 +50,10 @@ class Backend():
             
         return self.fila
 
-    def retornaSituacao(self):
+    def retornaSituacao(self): # Retorna a situacao
         return self.situacao
 
-    def retornaTempoBloqueio(self):
+    def retornaTempoBloqueio(self): # Decrementa o tempo de bloqueio e retorna o elemento na sua devida posicao na fila
         for i in range(len(self.tempoBloqueio)):
             if(self.tempoBloqueio[i] > 0):
                 self.tempoBloqueio[i] -= 1
